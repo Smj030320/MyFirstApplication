@@ -6,5 +6,6 @@
     <string name="jnu">JNU</string>
     <string name="change_text">Change Text</string>
     <string name="bookname1">bookname!</string>
-    <string name="todo">TODO</string>
+    <string name="string_ok">OK</string>
+    <string name="name">Name</string>
 </resources>
