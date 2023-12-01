@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:theme="@style/Theme.MyFirstApplication"
         >
         <activity
-            android:name=".BookItemDetailsActivity"
+            android:name=".BookItemDetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -24,5 +25,6 @@
             </intent-filter>
         </activity>
     </application>
-
+    <uses-permission android:name="android.permission.INTERNET"
+        tools:ignore="ManifestOrder" />
 </manifest>

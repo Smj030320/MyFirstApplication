@@ -1,39 +1,66 @@
 package com.jnu.student;
 
-import android.app.Activity;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
-import com.jnu.student.data.BookItem;
-import com.jnu.student.data.DataBank;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import java.util.ArrayList;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 
 public class MainActivity extends AppCompatActivity {
-    private BookItemAdapter bookItemAdapter;
+    private final String[] tabHeaderStrings = {"Shopping items", "baidu maps", "News"};
 
-    private ArrayList<BookItem> bookItems=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        RecyclerView mainRecyclerview = findViewById(R.id.recycle_view_books);
+        setContentView(R.layout.activity_main_recycleview);
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager(), getLifecycle());
+        viewPager.setAdapter(pagerAdapter);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(tabHeaderStrings[position])
+                // 设置TabLayout的标题
+        ).attach();
+    }
+
+    private static class FragmentAdapter extends FragmentStateAdapter {
+        private static final int NUM_TABS = 3;
+
+        public FragmentAdapter(FragmentManager fragmentManager, Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+        /** @noinspection NullableProblems*/
+        public Fragment createFragment (int position){
+            switch (position) {
+                case 0:
+                    return new ShoppingListFragment();
+                case 1:
+                    return new BaiduMapFrag();
+                case 2:
+                    return new WebViewFragment();
+                default:
+                    return null;
+            }
+        }
+        public int getItemCount() {
+            return NUM_TABS;
+        }
+    }
+}
+        /*RecyclerView mainRecyclerview = findViewById(R.id.recycle_view_books);
         mainRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         bookItems = new DataBank().LoadBookItems(MainActivity.this);
         if(0==bookItems.size()){
@@ -54,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
 
-                        assert data != null;
                         String name = data.getStringExtra("name");
                         bookItems.add(new BookItem(name, R.drawable.book_no_name));
                         bookItemAdapter.notifyItemInserted(bookItems.size());
@@ -62,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                         new DataBank().SaveBookItems(MainActivity.this,bookItems);
 
                         //获取返回的数据//在这塑可以根据需要进行进一步处理
+                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+
                     }
                 }
         );
@@ -70,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        assert data != null;
                         int position = data.getIntExtra("position",0);
                         String name = data.getStringExtra("name");
                         BookItem bookItem = bookItems.get(position);
@@ -80,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                         new DataBank().SaveBookItems(MainActivity.this,bookItems);
 
                         //获取返回的数据//在这塑可以根据需要进行进一步处理
+                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+
                     }
                 }
         );
@@ -91,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int MENU_ITEM_DELETE = 1;
     private static final int MENU_ITEM_UPDATE = 2;
     public boolean onContextItemSelected(MenuItem item) {
+        int position = item.getOrder();
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
         switch (item.getItemId()) {
             case MENU_ITEM_ADD:
 
@@ -101,14 +133,20 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Delete Data");
                 builder.setMessage("Are you sure you want to delete this data?");
-                builder.setPositiveButton( "确定", (dialog, which) -> {
-                    bookItems.remove(item.getOrder());
-                    bookItemAdapter.notifyItemRemoved(item.getOrder());
+                builder.setPositiveButton( "确定",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int which) {
+                        bookItems.remove(item.getOrder());
+                        bookItemAdapter.notifyItemRemoved(item.getOrder());
 
 
-                    new DataBank().SaveBookItems(MainActivity.this,bookItems);
+                        new DataBank().SaveBookItems(MainActivity.this,bookItems);
+                    }
+
                 });
-                builder.setNegativeButton( "取消", (dialog, which) -> {});
+                builder.setNegativeButton( "取消",new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
                 builder.create().show();
                 break;
             case MENU_ITEM_UPDATE:
@@ -124,15 +162,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public static class BookItemAdapter extends RecyclerView.Adapter<BookItemAdapter.ViewHolder> {
+    public  class BookItemAdapter extends RecyclerView.Adapter<BookItemAdapter.ViewHolder> {
 
-        private final ArrayList<BookItem> BookItemArrayList;
+        private ArrayList<BookItem> BookItemArrayList;
 
-        /**
-         * Provide a reference to the type of views that you are using
-         * (custom ViewHolder)
-         */
-        static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
             private final TextView textViewName;
             private final ImageView ImageViewNameItem;
 
@@ -158,12 +193,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /**
-         * Initialize the dataset of the Adapter
-         *
-         * @param dataSet String[] containing the data to populate views to be used
-         *                by RecyclerView
-         */
+
         public BookItemAdapter(ArrayList<BookItem> dataSet) {
 
             BookItemArrayList = dataSet;
@@ -171,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Create new views (invoked by the layout manager)
-        @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             // Create a new view, which defines the UI of the list item
@@ -194,20 +223,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return BookItemArrayList.size();
-        }
-        //TextView textView = new TextView(this);
-        // 设置TextView的文本内容
-        //textView.setText(R.id.text_vciew_hellow_world);
-        // 将TextView设置为Activity的内容视图
-        // 通过资源名称获取字符串资源的ID
+        }*/
+//TextView textView = new TextView(this);
+// 设置TextView的文本内容
+//textView.setText(R.id.text_vciew_hellow_world);
+// 将TextView设置为Activity的内容视图
+// 通过资源名称获取字符串资源的ID
 
-        // 通过资源ID获取字符串值
+// 通过资源ID获取字符串值
 
-        // 找到TextView
+// 找到TextView
 
-        // 设置文本内容
+// 设置文本内容
 
-        //setContentView(textView);
+//setContentView(textView);
         /*textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
         Button button = findViewById(R.id.button);
@@ -231,5 +260,3 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("OK", null)
                 .show();
     }*/
-    }
-}
