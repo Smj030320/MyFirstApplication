@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         public int getItemCount() {
             return NUM_TABS;
         }
+
+        private static class TencentMapFragment extends Fragment {
+        }
     }
 //
 //    private BookItemAdapter bookItemAdapter;
