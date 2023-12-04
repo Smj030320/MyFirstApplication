@@ -39,7 +39,7 @@ public class CustomClockView extends View {
     private void init() {
         // 初始化画笔
         circlePaint = new Paint();
-        circlePaint.setColor(Color.BLACK);
+        circlePaint.setColor(Color.GREEN);
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeWidth(5);
 
@@ -111,7 +111,6 @@ public class CustomClockView extends View {
         canvas.drawLine(centerX, centerY, secondX, secondY, secondHandPaint);
     }
     private final Handler handler = new Handler();
-
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
