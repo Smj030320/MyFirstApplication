@@ -7,8 +7,6 @@ public class BookItem implements Serializable{
         return imageId;
     }
 
-
-
     public String getName() {
         return name;
     }
