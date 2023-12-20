@@ -3,11 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TencentMapFragment">
-
+    tools:context=".Reward_Fragment">
     <com.tencent.tencentmap.mapsdk.maps.TextureMapView
-        android:id="@+id/mapView"
+        android:id="@+id/Map_View"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 </FrameLayout>

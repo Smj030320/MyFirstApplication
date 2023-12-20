@@ -36,7 +36,7 @@ public class ShoppingListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_shoplist, container, false);
 
-        RecyclerView mainRecyclerview = rootview.findViewById(R.id.recycler_view);// 创建布局管理器
+        RecyclerView mainRecyclerview = rootview.findViewById(R.id.Recycler_View);// 创建布局管理器
         mainRecyclerview.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         //定义一个Arraylist

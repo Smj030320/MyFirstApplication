@@ -16,14 +16,14 @@ import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TencentMapFragment#newInstance} factory method to
+ * Use the {@link Tencent_Map_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TencentMapFragment extends Fragment {
+public class Tencent_Map_Fragment extends Fragment {
     //    private MapView mMapView = null;
     private com.tencent.tencentmap.mapsdk.maps.MapView mapView = null;
 
-    public TencentMapFragment() {
+    public Tencent_Map_Fragment() {
         // Required empty public constructor
     }
 
@@ -33,8 +33,8 @@ public class TencentMapFragment extends Fragment {
      * @return A new instance of fragment BaiduMapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TencentMapFragment newInstance() {
-        TencentMapFragment fragment = new TencentMapFragment();
+    public static Tencent_Map_Fragment newInstance() {
+        Tencent_Map_Fragment fragment = new Tencent_Map_Fragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -51,7 +51,7 @@ public class TencentMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_tencent_map, container, false);
-        mapView = rootView.findViewById(R.id.mapView);
+        mapView = rootView.findViewById(R.id.Map_View);
 
         TencentMap TCMap = mapView.getMap();
 //

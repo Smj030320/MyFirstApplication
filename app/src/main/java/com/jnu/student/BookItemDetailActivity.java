@@ -18,7 +18,7 @@ public class BookItemDetailActivity extends AppCompatActivity {
             String name = intent.getStringExtra("name");
 
             if(null != name ){
-                EditText editTextItemName= findViewById(R.id.edittext_item_name);
+                EditText editTextItemName= findViewById(R.id.Edit_Text_Item_Name);
                 editTextItemName.setText(name);
             }
         }
@@ -26,7 +26,7 @@ public class BookItemDetailActivity extends AppCompatActivity {
 
         buttonOk.setOnClickListener(v -> {
             Intent intent1 = new Intent();
-            EditText editTextItemName= findViewById(R.id.edittext_item_name);
+            EditText editTextItemName= findViewById(R.id.Edit_Text_Item_Name);
 
             intent1.putExtra( "name" , editTextItemName.getText().toString());
             setResult(Activity.RESULT_OK, intent1) ;
